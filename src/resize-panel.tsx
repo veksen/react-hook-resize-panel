@@ -1,4 +1,5 @@
 /* eslint-disable react/display-name */
+import omit from "lodash/omit";
 import {
   ComponentProps,
   createContext,
@@ -11,7 +12,11 @@ import {
   useRef,
   useState,
 } from "react";
-import { DraggableCore, DraggableData } from "react-draggable";
+import {
+  DraggableCore,
+  DraggableCoreProps,
+  DraggableData,
+} from "react-draggable";
 
 type ContextType = {
   width: number;
@@ -60,11 +65,14 @@ function handleOverflow({ ui, currentWidth, nextWidth }: HandleOverflowParams) {
   if (clientWidth - nextScrollWidth < 0) return currentWidth - overflow;
   return nextWidth;
 }
-export function ResizeHandleRight(props: ComponentProps<"div">) {
+export function ResizeHandleRight(
+  props: ComponentProps<"div"> & Partial<DraggableCoreProps>
+) {
   const { setWidth, minWidth, maxWidth } = useContext(ReactContextResizePanel);
   const nodeRef: any = useRef<HTMLDivElement>(null);
   return (
     <DraggableCore
+      {...omit(props, "ref")}
       nodeRef={nodeRef}
       onDrag={(_, ui) => {
         window.getSelection()?.removeAllRanges();
@@ -79,15 +87,18 @@ export function ResizeHandleRight(props: ComponentProps<"div">) {
         }
       }}
     >
-      <Handle ref={nodeRef} {...props} />
+      <Handle ref={nodeRef} />
     </DraggableCore>
   );
 }
-export function ResizeHandleLeft(props: ComponentProps<"div">) {
+export function ResizeHandleLeft(
+  props: ComponentProps<"div"> & Partial<DraggableCoreProps>
+) {
   const { setWidth, minWidth, maxWidth } = useContext(ReactContextResizePanel);
   const nodeRef: any = useRef<HTMLDivElement>(null);
   return (
     <DraggableCore
+      {...omit(props, "ref")}
       nodeRef={nodeRef}
       onDrag={(_, ui) => {
         window.getSelection()?.removeAllRanges();
@@ -102,7 +113,7 @@ export function ResizeHandleLeft(props: ComponentProps<"div">) {
         }
       }}
     >
-      <Handle ref={nodeRef} {...props} />
+      <Handle ref={nodeRef} />
     </DraggableCore>
   );
 }
